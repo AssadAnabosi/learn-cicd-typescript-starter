@@ -1,10 +1,11 @@
 import { describe, it, expect } from "vitest";
 import { getAPIKey } from "../api/auth";
+import { IncomingHttpHeaders } from "http";
 
 describe("getAPIKey", () => {
   it("returns null when the Authorization header is missing", () => {
     const headers = {} as Record<string, unknown>;
-    expect(getAPIKey(headers as any)).toBeNull();
+    expect(getAPIKey(headers as IncomingHttpHeaders)).toBeNull();
   });
 
   it("returns null when the Authorization header is not an ApiKey scheme", () => {
@@ -12,12 +13,12 @@ describe("getAPIKey", () => {
       string,
       unknown
     >;
-    expect(getAPIKey(headers as any)).toBeNull();
+    expect(getAPIKey(headers as IncomingHttpHeaders)).toBeNull();
   });
 
   it("returns null when the Authorization header is malformed", () => {
     const headers = { authorization: "ApiKey" } as Record<string, unknown>;
-    expect(getAPIKey(headers as any)).toBeNull();
+    expect(getAPIKey(headers as IncomingHttpHeaders)).toBeNull();
   });
 
   it("returns the API key when Authorization is 'ApiKey <key>'", () => {
@@ -25,6 +26,6 @@ describe("getAPIKey", () => {
       string,
       unknown
     >;
-    expect(getAPIKey(headers as any)).toBe("my-secret-key");
+    expect(getAPIKey(headers as IncomingHttpHeaders)).toBe("my-secret-key");
   });
 });
